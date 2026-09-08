@@ -1,0 +1,210 @@
+import type { Zodiac } from '@/lib/types';
+
+/**
+ * The twelve Vedic moon signs with their traditional gemstone recommendation.
+ * `stoneSlug` links straight into /data/products.ts.
+ */
+export const zodiacSigns: Zodiac[] = [
+  {
+    slug: 'mesh',
+    name: 'Mesh',
+    english: 'Aries',
+    symbol: '♈',
+    dates: '14 Apr – 14 May',
+    element: 'Fire',
+    lord: 'Mars',
+    luckyStone: 'Red Coral',
+    luckyStoneHindi: 'Moonga',
+    stoneSlug: 'red-coral-moonga',
+    benefits: ['Builds courage and drive', 'Steadies a restless temper', 'Supports property matters'],
+    luckyColor: 'Red',
+    luckyDay: 'Tuesday',
+  },
+  {
+    slug: 'vrishabh',
+    name: 'Vrishabh',
+    english: 'Taurus',
+    symbol: '♉',
+    dates: '15 May – 14 Jun',
+    element: 'Earth',
+    lord: 'Venus',
+    luckyStone: 'White Sapphire',
+    luckyStoneHindi: 'Safed Pukhraj',
+    stoneSlug: 'white-sapphire-safed-pukhraj',
+    benefits: ['Attracts comfort and luxury', 'Strengthens relationships', 'Supports creative work'],
+    luckyColor: 'White',
+    luckyDay: 'Friday',
+  },
+  {
+    slug: 'mithun',
+    name: 'Mithun',
+    english: 'Gemini',
+    symbol: '♊',
+    dates: '15 Jun – 15 Jul',
+    element: 'Air',
+    lord: 'Mercury',
+    luckyStone: 'Emerald',
+    luckyStoneHindi: 'Panna',
+    stoneSlug: 'emerald-panna',
+    benefits: ['Sharpens memory and speech', 'Supports trade and negotiation', 'Calms nervous energy'],
+    luckyColor: 'Green',
+    luckyDay: 'Wednesday',
+  },
+  {
+    slug: 'karka',
+    name: 'Karka',
+    english: 'Cancer',
+    symbol: '♋',
+    dates: '16 Jul – 16 Aug',
+    element: 'Water',
+    lord: 'Moon',
+    luckyStone: 'Natural Pearl',
+    luckyStoneHindi: 'Moti',
+    stoneSlug: 'natural-pearl-moti',
+    benefits: ['Calms the mind', 'Improves sleep quality', 'Balances emotional swings'],
+    luckyColor: 'Silver White',
+    luckyDay: 'Monday',
+  },
+  {
+    slug: 'singh',
+    name: 'Singh',
+    english: 'Leo',
+    symbol: '♌',
+    dates: '17 Aug – 16 Sep',
+    element: 'Fire',
+    lord: 'Sun',
+    luckyStone: 'Natural Ruby',
+    luckyStoneHindi: 'Manik',
+    stoneSlug: 'natural-ruby-manik',
+    benefits: ['Builds confidence and authority', 'Improves public standing', 'Supports vitality'],
+    luckyColor: 'Deep Red',
+    luckyDay: 'Sunday',
+  },
+  {
+    slug: 'kanya',
+    name: 'Kanya',
+    english: 'Virgo',
+    symbol: '♍',
+    dates: '17 Sep – 16 Oct',
+    element: 'Earth',
+    lord: 'Mercury',
+    luckyStone: 'Emerald',
+    luckyStoneHindi: 'Panna',
+    stoneSlug: 'emerald-panna',
+    benefits: ['Improves analysis and detail', 'Supports business acumen', 'Eases overthinking'],
+    luckyColor: 'Green',
+    luckyDay: 'Wednesday',
+  },
+  {
+    slug: 'tula',
+    name: 'Tula',
+    english: 'Libra',
+    symbol: '♎',
+    dates: '17 Oct – 15 Nov',
+    element: 'Air',
+    lord: 'Venus',
+    luckyStone: 'White Sapphire',
+    luckyStoneHindi: 'Safed Pukhraj',
+    stoneSlug: 'white-sapphire-safed-pukhraj',
+    benefits: ['Deepens partnership harmony', 'Attracts artistic success', 'Invites refinement'],
+    luckyColor: 'Pastel Blue',
+    luckyDay: 'Friday',
+  },
+  {
+    slug: 'vrishchik',
+    name: 'Vrishchik',
+    english: 'Scorpio',
+    symbol: '♏',
+    dates: '16 Nov – 15 Dec',
+    element: 'Water',
+    lord: 'Mars',
+    luckyStone: 'Red Coral',
+    luckyStoneHindi: 'Moonga',
+    stoneSlug: 'red-coral-moonga',
+    benefits: ['Channels intensity productively', 'Builds resilience', 'Supports research work'],
+    luckyColor: 'Maroon',
+    luckyDay: 'Tuesday',
+  },
+  {
+    slug: 'dhanu',
+    name: 'Dhanu',
+    english: 'Sagittarius',
+    symbol: '♐',
+    dates: '16 Dec – 13 Jan',
+    element: 'Fire',
+    lord: 'Jupiter',
+    luckyStone: 'Yellow Sapphire',
+    luckyStoneHindi: 'Pukhraj',
+    stoneSlug: 'yellow-sapphire-pukhraj',
+    benefits: ['Expands wisdom and teaching', 'Supports wealth growth', 'Brings optimism'],
+    luckyColor: 'Golden Yellow',
+    luckyDay: 'Thursday',
+  },
+  {
+    slug: 'makar',
+    name: 'Makar',
+    english: 'Capricorn',
+    symbol: '♑',
+    dates: '14 Jan – 12 Feb',
+    element: 'Earth',
+    lord: 'Saturn',
+    luckyStone: 'Blue Sapphire',
+    luckyStoneHindi: 'Neelam',
+    stoneSlug: 'natural-blue-sapphire-neelam',
+    benefits: ['Accelerates career growth', 'Sharpens discipline', 'Removes long standing delays'],
+    luckyColor: 'Royal Blue',
+    luckyDay: 'Saturday',
+  },
+  {
+    slug: 'kumbh',
+    name: 'Kumbh',
+    english: 'Aquarius',
+    symbol: '♒',
+    dates: '13 Feb – 13 Mar',
+    element: 'Air',
+    lord: 'Saturn',
+    luckyStone: 'Blue Sapphire',
+    luckyStoneHindi: 'Neelam',
+    stoneSlug: 'natural-blue-sapphire-neelam',
+    benefits: ['Supports original thinking', 'Steadies erratic finances', 'Strengthens focus'],
+    luckyColor: 'Indigo',
+    luckyDay: 'Saturday',
+  },
+  {
+    slug: 'meen',
+    name: 'Meen',
+    english: 'Pisces',
+    symbol: '♓',
+    dates: '14 Mar – 13 Apr',
+    element: 'Water',
+    lord: 'Jupiter',
+    luckyStone: 'Yellow Sapphire',
+    luckyStoneHindi: 'Pukhraj',
+    stoneSlug: 'yellow-sapphire-pukhraj',
+    benefits: ['Grounds a dreamy mind', 'Supports spiritual study', 'Improves financial judgement'],
+    luckyColor: 'Sea Green',
+    luckyDay: 'Thursday',
+  },
+];
+
+export function getZodiacBySlug(slug: string): Zodiac | undefined {
+  return zodiacSigns.find((sign) => sign.slug === slug);
+}
+
+/**
+ * DEMO ASTROLOGY ENGINE
+ * ---------------------
+ * A real implementation would compute the moon sign from the birth date, time
+ * and place. For the prototype we derive a stable sign from the date of birth
+ * so the same input always returns the same recommendation.
+ */
+export function findLuckyStone(dateOfBirth: string): Zodiac {
+  const date = new Date(dateOfBirth);
+  if (Number.isNaN(date.getTime())) return zodiacSigns[0];
+  const dayOfYear = Math.floor(
+    (date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86_400_000,
+  );
+  // Vedic solar months begin mid-month, roughly day 104 for Mesh.
+  const index = Math.floor(((dayOfYear - 104 + 365) % 365) / 30.42);
+  return zodiacSigns[Math.min(index, 11)];
+}

@@ -1,6 +1,6 @@
-# Rashi Ratan — Premium Gemstone & Astrology Storefront
+# Agarwal Gemstone — Premium Gemstone & Astrology Storefront
 
-A frontend prototype for **Rashi Ratan**, an Indian ecommerce brand selling certified gemstones,
+A frontend prototype for **Agarwal Gemstone**, an Indian ecommerce brand selling certified gemstones,
 rashi ratna, navratna, rudraksha, crystals, yantras and spiritual products.
 
 **No database. No backend services.** Every product, category, review, zodiac sign and coupon lives in

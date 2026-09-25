@@ -24,7 +24,7 @@ import { formatINR } from '@/lib/utils';
 export const metadata: Metadata = {
   title: 'Help & Customer Support',
   description:
-    'Track an order, get help with payments, Cash on Delivery, GST invoices, returns and refunds, or talk to the Rashi Ratan support team on WhatsApp, phone or email.',
+    'Track an order, get help with payments, Cash on Delivery, GST invoices, returns and refunds, or talk to the Agarwal Gemstone support team on WhatsApp, phone or email.',
 };
 
 const QUICK_HELP = [
@@ -71,7 +71,7 @@ export default function SupportPage() {
       title: 'WhatsApp',
       line: SELLER.phone,
       detail: 'Fastest — replies in minutes',
-      href: whatsappLink('Hi Rashi Ratan, I need help with'),
+      href: whatsappLink('Hi Agarwal Gemstone, I need help with'),
       external: true,
     },
     { icon: Phone, title: 'Call us', line: SELLER.phone, detail: SELLER.hours, href: SELLER.phoneHref, external: false },
@@ -99,7 +99,7 @@ export default function SupportPage() {
             <OpenChatButton className="btn btn-lg btn-gold">
               <Sparkles className="h-4 w-4" /> Chat with Astro Assistant
             </OpenChatButton>
-            <a href={whatsappLink('Hi Rashi Ratan, I need help with')} target="_blank" rel="noopener noreferrer" className="btn btn-lg btn-ghost-light">
+            <a href={whatsappLink('Hi Agarwal Gemstone, I need help with')} target="_blank" rel="noopener noreferrer" className="btn btn-lg btn-ghost-light">
               <MessageCircle className="h-4 w-4" /> WhatsApp us
             </a>
           </div>

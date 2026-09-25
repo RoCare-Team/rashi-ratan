@@ -49,7 +49,7 @@ const TREATMENTS = [
   {
     icon: BadgeCheck,
     title: 'Natural & untreated',
-    copy: 'Mined and only cut and polished. The only kind recommended for astrological use, and what every Rashi Ratan stone is.',
+    copy: 'Mined and only cut and polished. The only kind recommended for astrological use, and what every Agarwal Gemstone stone is.',
   },
   {
     icon: FlaskConical,
@@ -87,7 +87,7 @@ const GUIDE_FAQS = [
   {
     question: 'How do I know a gemstone is genuine?',
     answer:
-      'Ask for a report from an independent laboratory and check the report number on the lab’s website. Every Rashi Ratan gemstone ships with a tamper-proof lab certificate.',
+      'Ask for a report from an independent laboratory and check the report number on the lab’s website. Every Agarwal Gemstone gemstone ships with a tamper-proof lab certificate.',
   },
 ];
 
@@ -182,7 +182,7 @@ export default function GemstonesPage() {
             <h2 className="h-display text-3xl">Not sure which stone is yours?</h2>
             <p className="max-w-xl text-sm leading-relaxed text-white/60">
               Chat with our astrology assistant any time using the button in the corner, or get a free 15 minute
-              consultation with a Rashi Ratan astrologer.
+              consultation with a Agarwal Gemstone astrologer.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link href="/astrology#consultation" className="btn btn-md btn-gold">

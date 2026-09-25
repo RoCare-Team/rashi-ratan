@@ -122,7 +122,7 @@ export default function Navbar() {
       >
         <div className="container-x">
           {/* Row 1 */}
-          <div className="flex h-[72px] items-center gap-4 lg:h-20 lg:gap-8">
+          <div className="flex h-[72px] items-center gap-2 sm:gap-4 lg:h-20 lg:gap-8">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}

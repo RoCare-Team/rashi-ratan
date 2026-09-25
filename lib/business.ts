@@ -1,13 +1,13 @@
 /**
  * Business identity and commercial rules in one place.
  *
- * Rashi Ratan is the storefront brand; Agarwal Gemstone is the registered
- * seller that appears on tax invoices. Update the GSTIN, address and contact
+ * Agarwal Gemstone is both the storefront brand and the registered seller
+ * that appears on tax invoices. Update the GSTIN, address and contact
  * numbers here and every page, invoice and the chatbot pick them up.
  */
 
 export const SELLER = {
-  brand: 'Rashi Ratan',
+  brand: 'Agarwal Gemstone',
   legalName: 'Agarwal Gemstone',
   /** Replace with the real GSTIN before going live — 08 is Rajasthan's state code. */
   gstin: '08ABCDE1234F1Z5',

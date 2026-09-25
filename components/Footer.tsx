@@ -77,7 +77,7 @@ export default function Footer() {
         <div className="lg:col-span-4">
           <Logo tone="dark" />
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/55">
-            Rashi Ratan brings certified natural gemstones, rudraksha, crystals and yantras to your doorstep, backed by
+            Agarwal Gemstone brings certified natural gemstones, rudraksha, crystals and yantras to your doorstep, backed by
             honest astrological guidance. Every stone is lab tested, energised and shipped insured across India.
           </p>
 
@@ -170,7 +170,7 @@ export default function Footer() {
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/45">
             <span>
-              © {new Date().getFullYear()} Rashi Ratan by {SELLER.legalName} · GSTIN {SELLER.gstin}
+              © {new Date().getFullYear()} {SELLER.legalName}. All rights reserved. · GSTIN {SELLER.gstin}
             </span>
             <Link href="/contact#privacy" className="transition-colors hover:text-white">
               Privacy Policy

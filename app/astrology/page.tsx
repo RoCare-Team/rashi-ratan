@@ -11,7 +11,7 @@ import { faqs } from '@/data/reviews';
 export const metadata: Metadata = {
   title: 'Astrology & Gemstone Guidance',
   description:
-    'Find your lucky gemstone, explore the nine planetary stones of the navagraha, and book a free consultation with a Rashi Ratan astrologer.',
+    'Find your lucky gemstone, explore the nine planetary stones of the navagraha, and book a free consultation with a Agarwal Gemstone astrologer.',
 };
 
 const NAVAGRAHA = [

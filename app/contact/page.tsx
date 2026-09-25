@@ -10,7 +10,7 @@ import { COD_FEE, COD_MAX_ORDER, SELLER, whatsappLink } from '@/lib/business';
 export const metadata: Metadata = {
   title: 'Contact & Policies',
   description:
-    'Reach the Rashi Ratan team in Jaipur, track an order, or read our shipping, return, privacy and terms policies.',
+    'Reach the Agarwal Gemstone team in Jaipur, track an order, or read our shipping, return, privacy and terms policies.',
 };
 
 const CHANNELS = [
@@ -32,7 +32,7 @@ const CHANNELS = [
     icon: MessageSquare,
     title: 'WhatsApp',
     lines: ['+91 99969 92608', 'Fastest for order updates'],
-    href: whatsappLink('Hi Rashi Ratan, I have a question'),
+    href: whatsappLink('Hi Agarwal Gemstone, I have a question'),
     action: 'Start a chat',
   },
   {

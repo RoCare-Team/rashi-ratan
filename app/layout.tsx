@@ -9,8 +9,8 @@ import AstroChat from '@/components/AstroChat';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Rashi Ratan — Certified Gemstones, Rudraksha & Spiritual Products',
-    template: '%s · Rashi Ratan',
+    default: 'Agarwal Gemstone — Certified Gemstones, Rudraksha & Spiritual Products',
+    template: '%s · Agarwal Gemstone',
   },
   description:
     'Shop certified natural gemstones, rashi ratna, navratna, rudraksha, crystals and yantras. Lab tested, energised and shipped insured across India with free expert astrology guidance.',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     'astrology',
   ],
   openGraph: {
-    title: 'Rashi Ratan — Certified Gemstones & Spiritual Products',
+    title: 'Agarwal Gemstone — Certified Gemstones & Spiritual Products',
     description:
       'Authentic gemstones and spiritual products crafted to bring positivity, prosperity, confidence and balance into your life.',
     type: 'website',

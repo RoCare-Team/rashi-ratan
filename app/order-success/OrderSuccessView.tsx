@@ -134,7 +134,7 @@ export default function OrderSuccessView() {
           </p>
 
           <h1 className="h-display mt-4 text-4xl text-white sm:text-5xl lg:text-6xl">
-            Thank you for shopping with <span className="text-gold-gradient italic">Rashi Ratan!</span>
+            Thank you for shopping with <span className="text-gold-gradient italic">Agarwal Gemstone!</span>
           </h1>
 
           <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-white/60">

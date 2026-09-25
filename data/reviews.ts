@@ -20,7 +20,7 @@ export const reviews: Review[] = [
     location: 'Bengaluru, Karnataka',
     rating: 5,
     title: 'Genuine Pukhraj at a fair price',
-    text: 'I compared three sellers before ordering. Rashi Ratan was the only one that shared the lab report before payment. The Pukhraj is clean, bright and exactly the carat weight promised.',
+    text: 'I compared three sellers before ordering. Agarwal Gemstone was the only one that shared the lab report before payment. The Pukhraj is clean, bright and exactly the carat weight promised.',
     date: '3 August 2026',
     verified: true,
     productSlug: 'yellow-sapphire-pukhraj',

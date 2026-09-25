@@ -21,7 +21,7 @@ import { reviews } from '@/data/reviews';
 export const metadata: Metadata = {
   title: 'Our Story',
   description:
-    'Three generations of gemmologists in Johari Bazaar, Jaipur. Learn how Rashi Ratan sources, tests and certifies every gemstone it sells.',
+    'Three generations of gemmologists in Johari Bazaar, Jaipur. Learn how Agarwal Gemstone sources, tests and certifies every gemstone it sells.',
 };
 
 const STATS = [
@@ -49,7 +49,7 @@ const TIMELINE = [
   },
   {
     year: '2026',
-    title: 'Rashi Ratan online',
+    title: 'Agarwal Gemstone online',
     copy: 'The same bench, the same standard, now shipping certified stones and energised yantras across India with astrological guidance included.',
   },
 ];
@@ -151,7 +151,7 @@ export default function AboutPage() {
             eyebrow="Our story"
             title="A family bench in"
             accent="Johari Bazaar"
-            description="Rashi Ratan grew out of a single gemstone counter in Jaipur, where trust was built one customer at a time and a wrong stone could end a reputation."
+            description="Agarwal Gemstone grew out of a single gemstone counter in Jaipur, where trust was built one customer at a time and a wrong stone could end a reputation."
           />
 
           <ol className="relative mx-auto max-w-3xl">

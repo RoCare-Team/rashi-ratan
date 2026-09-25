@@ -4,7 +4,7 @@ import TrackOrderView from './TrackOrderView';
 
 export const metadata: Metadata = {
   title: 'Track Your Order',
-  description: 'Live delivery status, courier and AWB details for your Rashi Ratan order.',
+  description: 'Live delivery status, courier and AWB details for your Agarwal Gemstone order.',
 };
 
 export default function TrackOrderPage() {

@@ -5,7 +5,7 @@ import ShopView from './ShopView';
 export const metadata: Metadata = {
   title: 'Shop Certified Gemstones, Rudraksha & Yantras',
   description:
-    'Browse the full Rashi Ratan collection. Filter certified gemstones by category, price, gemstone type, rashi and rating.',
+    'Browse the full Agarwal Gemstone collection. Filter certified gemstones by category, price, gemstone type, rashi and rating.',
 };
 
 function ShopFallback() {

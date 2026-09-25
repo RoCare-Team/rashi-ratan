@@ -177,7 +177,7 @@ export default function RazorpayCheckout({ quote, customer, paymentMethod, disab
         key: order.keyId,
         amount: order.amount,
         currency: order.currency,
-        name: 'Rashi Ratan',
+        name: 'Agarwal Gemstone',
         description: `Order ${order.storeOrderId} · ${items.length} item${items.length === 1 ? '' : 's'}`,
         order_id: order.orderId,
         prefill: { name: customer.name, email: customer.email, contact: customer.phone },

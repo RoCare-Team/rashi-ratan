@@ -89,7 +89,7 @@ function PackagingView({ product }: { product: Product }) {
         <div className="rounded-3xl bg-royal-deep p-6 shadow-lift">
           <div className="rounded-2xl border border-gold-400/30 bg-white/5 p-5 text-center backdrop-blur">
             <Gem className="mx-auto h-7 w-7 text-gold-300" />
-            <p className="mt-3 font-display text-lg font-semibold text-white">Rashi Ratan</p>
+            <p className="mt-3 font-display text-lg font-semibold text-white">Agarwal Gemstone</p>
             <p className="mt-0.5 text-[9px] uppercase tracking-[0.25em] text-white/40">Sealed &amp; insured</p>
             <div className="mt-4 h-px bg-gradient-to-r from-transparent via-gold-400/50 to-transparent" />
             <p className="mt-3 text-[11px] text-white/55">{product.name}</p>

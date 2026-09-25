@@ -228,7 +228,7 @@ export function ruleBasedReply(message: string): string {
   }
 
   if (/^(hi|hello|hey|namaste|namaskar|good (morning|evening|afternoon))\b/.test(text)) {
-    return 'Namaste! 🙏 I am the Rashi Ratan astrology assistant. Ask me which gemstone suits your rashi, share your date of birth, or ask about orders, COD, GST invoices and delivery.';
+    return 'Namaste! 🙏 I am the Agarwal Gemstone astrology assistant. Ask me which gemstone suits your rashi, share your date of birth, or ask about orders, COD, GST invoices and delivery.';
   }
 
   return [

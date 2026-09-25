@@ -91,7 +91,7 @@ export default function HomePage() {
             <div>
               <SectionHeading
                 align="left"
-                eyebrow="Why Rashi Ratan"
+                eyebrow="Why Agarwal Gemstone"
                 title="Three generations of"
                 accent="honest gemmology"
                 description="We began as a family counter in Johari Bazaar, Jaipur in 1998. The scale has changed, the standard has not: no treated stone leaves our workshop described as natural."

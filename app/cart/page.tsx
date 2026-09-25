@@ -3,7 +3,7 @@ import CartView from './CartView';
 
 export const metadata: Metadata = {
   title: 'Shopping Cart',
-  description: 'Review the certified gemstones and spiritual products in your Rashi Ratan cart.',
+  description: 'Review the certified gemstones and spiritual products in your Agarwal Gemstone cart.',
 };
 
 export default function CartPage() {

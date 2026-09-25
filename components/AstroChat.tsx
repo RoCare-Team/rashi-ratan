@@ -22,7 +22,7 @@ const QUICK_QUESTIONS = [
 const GREETING: ChatMessage = {
   role: 'assistant',
   content:
-    'Namaste! 🙏 I am your **Rashi Ratan astrology assistant**. Ask me which gemstone suits your rashi, share your date of birth, or ask about orders, Cash on Delivery and GST invoices.',
+    'Namaste! 🙏 I am your **Agarwal Gemstone astrology assistant**. Ask me which gemstone suits your rashi, share your date of birth, or ask about orders, Cash on Delivery and GST invoices.',
 };
 
 /* ------------------------------ Tiny markdown ------------------------------ */

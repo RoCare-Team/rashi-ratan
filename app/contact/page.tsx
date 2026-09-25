@@ -5,6 +5,7 @@ import ContactForm from './ContactForm';
 import FAQ from '@/components/FAQ';
 import SectionHeading from '@/components/SectionHeading';
 import { faqs } from '@/data/reviews';
+import { COD_FEE, COD_MAX_ORDER, SELLER, whatsappLink } from '@/lib/business';
 
 export const metadata: Metadata = {
   title: 'Contact & Policies',
@@ -31,14 +32,14 @@ const CHANNELS = [
     icon: MessageSquare,
     title: 'WhatsApp',
     lines: ['+91 98765 43210', 'Fastest for order updates'],
-    href: '#',
+    href: whatsappLink('Hi Rashi Ratan, I have a question'),
     action: 'Start a chat',
   },
   {
     icon: MapPin,
     title: 'Visit the store',
     lines: ['4th Floor, Gem Plaza, Johari Bazaar', 'Jaipur, Rajasthan 302003'],
-    href: '#',
+    href: 'https://www.google.com/maps/search/?api=1&query=Johari+Bazaar+Jaipur',
     action: 'Get directions',
   },
 ];
@@ -48,7 +49,7 @@ const POLICIES = [
     id: 'shipping',
     icon: Truck,
     title: 'Shipping Policy',
-    body: 'Orders are dispatched within 24 hours of payment confirmation. Metro cities receive delivery in 2 to 4 working days and the rest of India in 4 to 7. Shipping is free above ₹2,000, otherwise ₹149 is added at checkout. Every parcel travels insured with live tracking sent by SMS and email. Made to order jewellery takes 10 to 14 days as each piece is crafted around your chosen stone.',
+    body: `Orders are dispatched within 24 hours of payment confirmation. Metro cities receive delivery in 2 to 4 working days and the rest of India in 4 to 7. Shipping is free above ₹2,000, otherwise ₹149 is added at checkout. Cash on Delivery is available on orders up to ₹${COD_MAX_ORDER.toLocaleString('en-IN')} for a ₹${COD_FEE} handling fee. Every parcel travels insured with live tracking sent by SMS and email. Made to order jewellery takes 10 to 14 days as each piece is crafted around your chosen stone.`,
   },
   {
     id: 'returns',
@@ -60,7 +61,7 @@ const POLICIES = [
     id: 'track',
     icon: Package,
     title: 'Track Your Order',
-    body: 'A tracking link is sent by SMS and email the moment your parcel leaves our workshop. You can also find every order and its live status in your account. If tracking has not updated for 48 hours, message us on WhatsApp with your order ID and we will chase the courier for you.',
+    body: 'A tracking link is sent by SMS and email the moment your parcel leaves our workshop. You can also follow every order live on the Track Order page using your order ID and mobile number. If tracking has not updated for 48 hours, message us on WhatsApp with your order ID and we will chase the courier for you.',
   },
   {
     id: 'privacy',
@@ -72,7 +73,7 @@ const POLICIES = [
     id: 'terms',
     icon: Clock,
     title: 'Terms & Conditions',
-    body: 'Prices include GST and are subject to change without notice. Gemstone colour may vary slightly between screens and natural light. Astrological guidance is offered in the spirit of traditional belief and is not a substitute for professional medical, legal or financial advice. Orders may be cancelled before dispatch for a full refund. This site is a prototype demonstration and no live payments are processed.',
+    body: `Prices include GST and are subject to change without notice. Every order is billed by ${SELLER.legalName} (GSTIN ${SELLER.gstin}) with a GST tax invoice — CGST and SGST for deliveries within ${SELLER.state}, IGST for other states. Gemstone colour may vary slightly between screens and natural light. Astrological guidance is offered in the spirit of traditional belief and is not a substitute for professional medical, legal or financial advice. Orders may be cancelled before dispatch for a full refund. This site is a prototype demonstration and no live payments are processed.`,
   },
 ];
 
@@ -88,10 +89,11 @@ export default function ContactPage() {
             <Headphones className="h-3.5 w-3.5" /> We reply within one working day
           </span>
           <h1 className="h-display mt-6 max-w-3xl text-5xl leading-[1.05] text-white sm:text-6xl">
-            Talk to a human, not a <span className="text-gold-gradient italic">chatbot</span>
+            Talk to our team in <span className="text-gold-gradient italic">Jaipur</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/65">
-            Questions about a stone, an order, or your chart? Our team in Jaipur answers every message personally.
+            Questions about a stone, an order, or your chart? Our team answers every message personally. For order
+            issues, the <Link href="/support" className="font-semibold text-gold-300 underline underline-offset-4">support centre</Link> is fastest.
           </p>
         </div>
       </section>
@@ -104,6 +106,7 @@ export default function ContactPage() {
               <a
                 key={title}
                 href={href}
+                {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className="group rounded-3xl border border-sand-200 bg-white p-6 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-lift"
               >
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-royal-50 text-royal-700 transition-colors duration-300 group-hover:bg-royal-deep group-hover:text-gold-300">

@@ -1,12 +1,30 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { ArrowRight, BadgeCheck, Lock, Mail, MapPin, Phone, ShoppingBag, Tag, Truck, User } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import {
+  ArrowRight,
+  BadgeCheck,
+  Banknote,
+  Building2,
+  Check,
+  Lock,
+  Mail,
+  MapPin,
+  Phone,
+  Receipt,
+  ShoppingBag,
+  Tag,
+  Truck,
+  User,
+} from 'lucide-react';
 import GemVisual from '@/components/GemVisual';
 import RazorpayCheckout, { type CheckoutCustomer } from '@/components/RazorpayCheckout';
 import { useStore } from '@/context/StoreContext';
-import { cn, formatINR } from '@/lib/utils';
+import { COD_FEE, COD_MAX_ORDER, INDIAN_STATES, SELLER, type PaymentMethod } from '@/lib/business';
+import { quoteCart } from '@/lib/pricing';
+import { validateCustomer, type CustomerErrors } from '@/lib/validation';
+import { cn, formatINR, formatINRExact } from '@/lib/utils';
 
 type Field = keyof CheckoutCustomer;
 
@@ -18,54 +36,47 @@ const EMPTY: CheckoutCustomer = {
   city: '',
   state: '',
   pincode: '',
+  gstin: '',
+  businessName: '',
 };
 
-const STATES = [
-  'Andhra Pradesh',
-  'Assam',
-  'Bihar',
-  'Chhattisgarh',
-  'Delhi',
-  'Goa',
-  'Gujarat',
-  'Haryana',
-  'Himachal Pradesh',
-  'Jharkhand',
-  'Karnataka',
-  'Kerala',
-  'Madhya Pradesh',
-  'Maharashtra',
-  'Odisha',
-  'Punjab',
-  'Rajasthan',
-  'Tamil Nadu',
-  'Telangana',
-  'Uttar Pradesh',
-  'Uttarakhand',
-  'West Bengal',
-];
-
 export default function CheckoutView() {
-  const { items, itemCount, subtotal, discount, delivery, total, coupon, hydrated } = useStore();
+  const { items, itemCount, coupon, hydrated } = useStore();
   const [customer, setCustomer] = useState<CheckoutCustomer>(EMPTY);
-  const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
+  const [errors, setErrors] = useState<CustomerErrors>({});
+  const [wantsGstInvoice, setWantsGstInvoice] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('online');
+
+  // Price the online option first: it tells us whether COD is allowed for this cart.
+  const onlineQuote = useMemo(
+    () => quoteCart(items, { couponCode: coupon?.code ?? null, buyerState: customer.state, paymentMethod: 'online' }),
+    [items, coupon, customer.state],
+  );
+  const codAllowed = onlineQuote.codAllowed;
+  const activeMethod: PaymentMethod = paymentMethod === 'cod' && codAllowed ? 'cod' : 'online';
+  const quote = useMemo(
+    () =>
+      activeMethod === 'online'
+        ? onlineQuote
+        : quoteCart(items, { couponCode: coupon?.code ?? null, buyerState: customer.state, paymentMethod: 'cod' }),
+    [activeMethod, onlineQuote, items, coupon, customer.state],
+  );
+  const { subtotal, discount, delivery, codFee, total, gst } = quote;
 
   const update = (field: Field) => (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const value = field === 'pincode' || field === 'phone' ? event.target.value.replace(/\D/g, '') : event.target.value;
+    let value = event.target.value;
+    if (field === 'pincode' || field === 'phone') value = value.replace(/\D/g, '');
+    if (field === 'gstin') value = value.toUpperCase().replace(/[^0-9A-Z]/g, '');
     setCustomer((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
   };
 
-  const validate = () => {
-    const next: Partial<Record<Field, string>> = {};
-    if (customer.name.trim().length < 3) next.name = 'Enter your full name';
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(customer.email)) next.email = 'Enter a valid email address';
-    if (customer.phone.length !== 10) next.phone = 'Enter a 10 digit mobile number';
-    if (customer.address.trim().length < 8) next.address = 'Enter your full delivery address';
-    if (!customer.city.trim()) next.city = 'Enter your city';
-    if (!customer.state) next.state = 'Select your state';
-    if (customer.pincode.length !== 6) next.pincode = 'Enter a 6 digit pincode';
+  const payload: CheckoutCustomer = wantsGstInvoice
+    ? customer
+    : { ...customer, gstin: undefined, businessName: undefined };
 
+  const validate = () => {
+    const next = validateCustomer(payload);
     setErrors(next);
     if (Object.keys(next).length > 0) {
       document.getElementById('checkout-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -250,9 +261,9 @@ export default function CheckoutView() {
                   className={cn(inputClass('state'), 'cursor-pointer')}
                 >
                   <option value="">Select a state</option>
-                  {STATES.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
+                  {INDIAN_STATES.map((state) => (
+                    <option key={state.code} value={state.name}>
+                      {state.name}
                     </option>
                   ))}
                 </select>
@@ -284,6 +295,64 @@ export default function CheckoutView() {
                 link is sent by SMS and email as soon as your parcel is dispatched.
               </p>
             </div>
+
+            {/* GST invoice for businesses */}
+            <div className="mt-6 rounded-2xl border border-sand-200 p-4 sm:p-5">
+              <label className="flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={wantsGstInvoice}
+                  onChange={(event) => {
+                    setWantsGstInvoice(event.target.checked);
+                    setErrors((current) => ({ ...current, gstin: undefined, businessName: undefined }));
+                  }}
+                  className="mt-1 h-4 w-4 accent-royal-700"
+                />
+                <span>
+                  <span className="flex items-center gap-2 text-sm font-semibold text-navy-900">
+                    <Building2 className="h-4 w-4 text-royal-600" /> I need a GST invoice for my business
+                  </span>
+                  <span className="mt-0.5 block text-xs text-navy-900/50">
+                    Add your GSTIN to claim input tax credit. Every order gets a tax invoice either way.
+                  </span>
+                </span>
+              </label>
+
+              {wantsGstInvoice && (
+                <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="gstin" className="field-label">
+                      GSTIN
+                    </label>
+                    <input
+                      id="gstin"
+                      value={customer.gstin ?? ''}
+                      onChange={update('gstin')}
+                      maxLength={15}
+                      placeholder="27ABCDE1234F1Z5"
+                      className={cn(inputClass('gstin'), 'font-mono uppercase tracking-wider')}
+                    />
+                    {errors.gstin && <p className="mt-1.5 text-xs font-medium text-rose-600">{errors.gstin}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="businessName" className="field-label">
+                      Registered business name
+                    </label>
+                    <input
+                      id="businessName"
+                      value={customer.businessName ?? ''}
+                      onChange={update('businessName')}
+                      placeholder="Sharma Traders"
+                      autoComplete="organization"
+                      className={inputClass('businessName')}
+                    />
+                    {errors.businessName && (
+                      <p className="mt-1.5 text-xs font-medium text-rose-600">{errors.businessName}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </section>
 
           {/* Payment */}
@@ -295,20 +364,71 @@ export default function CheckoutView() {
               <h2 className="font-display text-2xl font-semibold text-navy-900">Payment</h2>
             </div>
 
-            <div className="rounded-2xl border border-royal-200 bg-royal-50/60 p-5">
-              <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 place-items-center rounded-xl bg-white text-[#0c2451] shadow-soft">
-                  <Lock className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="font-semibold text-navy-900">Razorpay Secure Checkout</p>
-                  <p className="text-xs text-navy-900/55">UPI, Credit &amp; Debit Cards, Net Banking, Wallets</p>
-                </div>
-              </div>
+            <div className="grid gap-3" role="radiogroup" aria-label="Payment method">
+              {(
+                [
+                  {
+                    value: 'online' as const,
+                    icon: Lock,
+                    title: 'Pay Online',
+                    detail: 'UPI, Credit & Debit Cards, Net Banking, Wallets via Razorpay',
+                    tag: 'Fastest dispatch',
+                    available: true,
+                  },
+                  {
+                    value: 'cod' as const,
+                    icon: Banknote,
+                    title: 'Cash on Delivery',
+                    detail: codAllowed
+                      ? `Pay in cash or UPI when the parcel arrives · ${formatINR(COD_FEE)} handling fee`
+                      : `Available on orders up to ${formatINR(COD_MAX_ORDER)}. Please pay online for this order.`,
+                    tag: `+ ${formatINR(COD_FEE)}`,
+                    available: codAllowed,
+                  },
+                ]
+              ).map((option) => {
+                const selected = activeMethod === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    disabled={!option.available}
+                    onClick={() => setPaymentMethod(option.value)}
+                    className={cn(
+                      'flex w-full items-center gap-4 rounded-2xl border p-4 text-left transition-all sm:p-5',
+                      selected
+                        ? 'border-royal-500 bg-royal-50/70 ring-4 ring-royal-500/10'
+                        : 'border-sand-200 bg-white hover:border-royal-300',
+                      !option.available && 'cursor-not-allowed opacity-60 hover:border-sand-200',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'grid h-5 w-5 shrink-0 place-items-center rounded-full border-2',
+                        selected ? 'border-royal-700 bg-royal-700 text-white' : 'border-sand-300',
+                      )}
+                    >
+                      {selected && <Check className="h-3 w-3" strokeWidth={3} />}
+                    </span>
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-royal-700 shadow-soft">
+                      <option.icon className="h-5 w-5" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold text-navy-900">{option.title}</span>
+                      <span className="block text-xs leading-relaxed text-navy-900/55">{option.detail}</span>
+                    </span>
+                    <span className="hidden shrink-0 rounded-full bg-sand-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-navy-900/55 sm:inline">
+                      {option.tag}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             <div className="mt-6">
-              <RazorpayCheckout amount={total} customer={customer} onValidate={validate} />
+              <RazorpayCheckout quote={quote} customer={payload} paymentMethod={activeMethod} onValidate={validate} />
             </div>
           </section>
         </div>
@@ -369,11 +489,57 @@ export default function CheckoutView() {
                   {delivery === 0 ? 'FREE' : formatINR(delivery)}
                 </span>
               </div>
+
+              {codFee > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-navy-900/55">COD handling fee</span>
+                  <span className="font-semibold text-navy-900">{formatINR(codFee)}</span>
+                </div>
+              )}
+            </div>
+
+            {/* GST breakup — prices are tax inclusive, this shows what is inside them */}
+            <div className="border-t border-dashed border-sand-200 px-6 py-4 text-[13px]">
+              <p className="mb-2.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-navy-900/45">
+                <Receipt className="h-3.5 w-3.5" /> GST included in total
+              </p>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-navy-900/55">
+                  <span>Taxable value</span>
+                  <span>{formatINRExact(gst.taxable)}</span>
+                </div>
+                {!customer.state ? (
+                  <p className="text-xs text-navy-900/45">Select your state to see the CGST / SGST or IGST split.</p>
+                ) : gst.supplyType === 'intra' ? (
+                  <>
+                    <div className="flex justify-between text-navy-900/55">
+                      <span>CGST</span>
+                      <span>{formatINRExact(gst.cgst)}</span>
+                    </div>
+                    <div className="flex justify-between text-navy-900/55">
+                      <span>SGST ({SELLER.state})</span>
+                      <span>{formatINRExact(gst.sgst)}</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex justify-between text-navy-900/55">
+                    <span>IGST (delivery to {customer.state})</span>
+                    <span>{formatINRExact(gst.igst)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-semibold text-navy-900/75">
+                  <span>Total GST</span>
+                  <span>{formatINRExact(gst.totalTax)}</span>
+                </div>
+              </div>
             </div>
 
             <div className="border-t border-sand-200 bg-sand-50 px-6 py-5">
               <div className="flex items-end justify-between">
-                <span className="font-semibold text-navy-900">Total</span>
+                <span>
+                  <span className="block font-semibold text-navy-900">Total</span>
+                  <span className="block text-[11px] text-navy-900/45">Inclusive of all taxes</span>
+                </span>
                 <span className="font-display text-4xl font-bold text-navy-900">{formatINR(total)}</span>
               </div>
 
@@ -382,6 +548,7 @@ export default function CheckoutView() {
                   'Lab certificate included with every stone',
                   'Free insured shipping above ₹2,000',
                   '7 day easy return window',
+                  'GST tax invoice with every order',
                 ].map((line) => (
                   <li key={line} className="flex items-start gap-2">
                     <BadgeCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" />

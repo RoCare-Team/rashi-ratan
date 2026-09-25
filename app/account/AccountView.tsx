@@ -1,17 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Heart, MapPin, Package, ShoppingBag, Truck, User } from 'lucide-react';
+import { ArrowRight, FileText, Heart, MapPin, Package, ShoppingBag, Truck, User } from 'lucide-react';
 import GemVisual from '@/components/GemVisual';
 import { useStore } from '@/context/StoreContext';
-import { estimatedDelivery, formatINR } from '@/lib/utils';
+import { getTracking } from '@/lib/tracking';
+import { formatDateTime, formatINR } from '@/lib/utils';
 
 /** Demo account dashboard — reads the locally stored order and wishlist. */
 export default function AccountView() {
-  const { lastOrder, wishlist, itemCount, hydrated } = useStore();
+  const { lastOrder, orders, wishlist, itemCount, hydrated } = useStore();
+  const tracking = lastOrder ? getTracking(lastOrder) : null;
 
   const stats = [
-    { icon: Package, label: 'Orders placed', value: lastOrder ? '1' : '0' },
+    { icon: Package, label: 'Orders placed', value: String(orders.length) },
     { icon: Heart, label: 'Wishlist items', value: String(wishlist.length) },
     { icon: ShoppingBag, label: 'In your cart', value: String(itemCount) },
   ];
@@ -68,8 +70,8 @@ export default function AccountView() {
                     <p className="text-xs font-semibold uppercase tracking-wider text-navy-900/45">Order ID</p>
                     <p className="font-display text-2xl font-bold text-navy-900">{lastOrder.orderId}</p>
                   </div>
-                  <span className="badge badge-green">
-                    <Truck className="h-3 w-3" /> In transit
+                  <span className={tracking?.status === 'delivered' ? 'badge badge-green' : 'badge badge-royal'}>
+                    <Truck className="h-3 w-3" /> {tracking?.statusLabel}
                   </span>
                 </div>
 
@@ -96,10 +98,49 @@ export default function AccountView() {
 
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-sand-200 pt-4">
                   <p className="text-sm text-navy-900/55">
-                    Estimated delivery <span className="font-semibold text-navy-900">{estimatedDelivery(5)}</span>
+                    {tracking?.status === 'delivered' ? 'Delivered' : 'Expected by'}{' '}
+                    <span className="font-semibold text-navy-900">
+                      {tracking ? formatDateTime(tracking.expectedDelivery) : ''}
+                    </span>
                   </p>
                   <span className="font-display text-2xl font-bold text-navy-900">{formatINR(lastOrder.amount)}</span>
                 </div>
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Link href={`/track-order?id=${encodeURIComponent(lastOrder.orderId)}`} className="btn btn-md btn-primary">
+                    <Truck className="h-4 w-4" /> Track delivery
+                  </Link>
+                  <Link href={`/invoice?id=${encodeURIComponent(lastOrder.orderId)}`} className="btn btn-md btn-outline">
+                    <FileText className="h-4 w-4" /> GST invoice
+                  </Link>
+                </div>
+
+                {orders.length > 1 && (
+                  <div className="mt-8 border-t border-sand-200 pt-6">
+                    <h3 className="font-display text-xl font-semibold text-navy-900">Order history</h3>
+                    <ul className="mt-3 divide-y divide-sand-100">
+                      {orders.map((order) => (
+                        <li key={order.orderId} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+                          <span>
+                            <span className="block font-mono font-semibold text-navy-900">{order.orderId}</span>
+                            <span className="text-xs text-navy-900/45">
+                              {formatDateTime(order.placedAt)} · {order.method}
+                            </span>
+                          </span>
+                          <span className="flex items-center gap-4">
+                            <span className="font-semibold text-navy-900">{formatINR(order.amount)}</span>
+                            <Link
+                              href={`/track-order?id=${encodeURIComponent(order.orderId)}`}
+                              className="text-xs font-semibold text-royal-700 hover:text-royal-900"
+                            >
+                              {getTracking(order).statusLabel} →
+                            </Link>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </>
             ) : (
               <div className="mt-6 rounded-2xl border border-dashed border-sand-300 p-10 text-center">

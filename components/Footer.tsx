@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, Facebook, Instagram, Mail, MapPin, Phone, Send, Youtube } from 'lucide-react';
+import { SELLER } from '@/lib/business';
 import Logo from './Logo';
 
 const SHOP_LINKS = [
@@ -12,11 +13,12 @@ const SHOP_LINKS = [
 ];
 
 const SUPPORT_LINKS = [
+  { label: 'Help & Support', href: '/support' },
+  { label: 'Track Your Order', href: '/track-order' },
   { label: 'Contact Us', href: '/contact' },
   { label: 'Shipping Policy', href: '/contact#shipping' },
   { label: 'Return Policy', href: '/contact#returns' },
-  { label: 'FAQ', href: '/#faq' },
-  { label: 'Track Your Order', href: '/contact#track' },
+  { label: 'Types of Gemstones', href: '/gemstones' },
   { label: 'Certification', href: '/about#certification' },
 ];
 
@@ -34,11 +36,12 @@ const PAYMENTS = [
   { label: 'VISA', tone: 'text-[#1a1f71]' },
   { label: 'Mastercard', tone: 'text-[#c8102e]' },
   { label: 'RuPay', tone: 'text-[#0f7b3f]' },
+  { label: 'Cash on Delivery', tone: 'text-navy-900' },
 ];
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-navy-950 text-white">
+    <footer className="relative overflow-hidden bg-navy-950 text-white print:hidden">
       <div className="pointer-events-none absolute inset-0 bg-aurora opacity-40" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/60 to-transparent" />
 
@@ -166,7 +169,9 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/45">
-            <span>© {new Date().getFullYear()} Rashi Ratan. All rights reserved.</span>
+            <span>
+              © {new Date().getFullYear()} Rashi Ratan by {SELLER.legalName} · GSTIN {SELLER.gstin}
+            </span>
             <Link href="/contact#privacy" className="transition-colors hover:text-white">
               Privacy Policy
             </Link>

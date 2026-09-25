@@ -145,12 +145,41 @@ export interface Coupon {
   minSubtotal: number;
 }
 
+export interface OrderCustomer {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  /** Optional buyer GSTIN for a B2B tax invoice */
+  gstin?: string;
+  businessName?: string;
+}
+
+export interface OrderCharges {
+  subtotal: number;
+  discount: number;
+  couponCode: string | null;
+  delivery: number;
+  codFee: number;
+  total: number;
+}
+
 export interface DemoOrder {
   orderId: string;
   paymentId: string;
   amount: number;
+  /** Human readable, e.g. "Razorpay" or "Cash on Delivery" */
   method: string;
   placedAt: string;
   items: CartItem[];
-  customer: { name: string; email: string; phone: string; address: string; city: string; state: string; pincode: string };
+  customer: OrderCustomer;
+  /* Added with COD + GST support — optional so older saved orders still load. */
+  paymentMethod?: 'online' | 'cod';
+  paymentStatus?: 'paid' | 'pending';
+  invoiceNumber?: string;
+  charges?: OrderCharges;
+  gst?: import('./gst').GstBreakdown;
 }

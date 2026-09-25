@@ -26,6 +26,8 @@ const CART_KEY = 'rashi-ratan.cart';
 const WISHLIST_KEY = 'rashi-ratan.wishlist';
 const ORDER_KEY = 'rashi-ratan.last-order';
 const COUPON_KEY = 'rashi-ratan.coupon';
+const ORDERS_KEY = 'rashi-ratan.orders';
+const MAX_SAVED_ORDERS = 20;
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -66,9 +68,13 @@ interface StoreValue {
   applyCoupon: (code: string) => { ok: boolean; message: string };
   clearCoupon: () => void;
 
-  /* order */
+  /* orders */
   lastOrder: DemoOrder | null;
+  /** Every order placed in this browser, newest first */
+  orders: DemoOrder[];
+  /** Saves a newly placed order and makes it the last order */
   setLastOrder: (order: DemoOrder) => void;
+  findOrder: (orderId: string) => DemoOrder | undefined;
 
   /* toasts */
   toasts: Toast[];
@@ -96,6 +102,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [coupon, setCoupon] = useState<Coupon | null>(null);
   const [lastOrder, setLastOrderState] = useState<DemoOrder | null>(null);
+  const [orders, setOrders] = useState<DemoOrder[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [hydrated, setHydrated] = useState(false);
@@ -105,7 +112,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setItems(readJSON<CartItem[]>(CART_KEY, []));
     setWishlist(readJSON<string[]>(WISHLIST_KEY, []));
-    setLastOrderState(readJSON<DemoOrder | null>(ORDER_KEY, null));
+    const savedLast = readJSON<DemoOrder | null>(ORDER_KEY, null);
+    setLastOrderState(savedLast);
+    const savedOrders = readJSON<DemoOrder[]>(ORDERS_KEY, []);
+    // Orders placed before history existed only live under the last-order key.
+    setOrders(savedOrders.length === 0 && savedLast ? [savedLast] : savedOrders);
 
     // Store only the code and re-resolve it, so coupon rules stay server-authoritative.
     const savedCode = readJSON<string | null>(COUPON_KEY, null);
@@ -257,12 +268,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   /* ---------------------------------- order -------------------------------- */
   const setLastOrder = useCallback((order: DemoOrder) => {
     setLastOrderState(order);
+    setOrders((current) => {
+      const next = [order, ...current.filter((item) => item.orderId !== order.orderId)].slice(0, MAX_SAVED_ORDERS);
+      try {
+        window.localStorage.setItem(ORDERS_KEY, JSON.stringify(next));
+      } catch {
+        /* storage unavailable — history lives in memory for this visit */
+      }
+      return next;
+    });
     try {
       window.localStorage.setItem(ORDER_KEY, JSON.stringify(order));
     } catch {
       /* storage unavailable — the in-memory order still drives the success page */
     }
   }, []);
+
+  const findOrder = useCallback(
+    (orderId: string) => {
+      const needle = orderId.trim().toUpperCase();
+      return orders.find((order) => order.orderId.toUpperCase() === needle);
+    },
+    [orders],
+  );
 
   /* ------------------------------- cart drawer ------------------------------ */
   const openCart = useCallback(() => setIsCartOpen(true), []);
@@ -299,7 +327,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     applyCoupon,
     clearCoupon,
     lastOrder,
+    orders,
     setLastOrder,
+    findOrder,
     toasts,
     toast,
     dismissToast,

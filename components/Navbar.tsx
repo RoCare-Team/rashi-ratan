@@ -30,9 +30,10 @@ const NAV_LINKS = [
   { label: 'Rudraksha', href: '/shop?category=rudraksha' },
   { label: 'Crystals', href: '/shop?category=crystals' },
   { label: 'Yantras', href: '/shop?category=yantras' },
+  { label: 'Gem Guide', href: '/gemstones' },
   { label: 'Astrology', href: '/astrology' },
   { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Support', href: '/support' },
 ];
 
 const TICKER = [
@@ -82,7 +83,7 @@ export default function Navbar() {
   return (
     <>
       {/* ------------------------------ Announcement ------------------------------ */}
-      <div className="relative z-50 overflow-hidden bg-navy-950 text-white">
+      <div className="relative z-50 overflow-hidden bg-navy-950 text-white print:hidden">
         <div className="container-x flex h-9 items-center justify-between text-[11px] font-medium">
           <div className="flex items-center gap-6 overflow-hidden">
             {TICKER.map((item, index) => (
@@ -98,9 +99,12 @@ export default function Navbar() {
           <div className="flex items-center gap-5">
             <a href="tel:+919876543210" className="flex items-center gap-1.5 text-white/70 transition-colors hover:text-gold-300">
               <Phone className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">+91 98765 43210</span>
+              <span className="hidden whitespace-nowrap sm:inline">+91 98765 43210</span>
             </a>
-            <Link href="/contact" className="hidden text-white/70 transition-colors hover:text-gold-300 sm:inline">
+            <Link href="/support" className="hidden whitespace-nowrap text-white/70 transition-colors hover:text-gold-300 md:inline">
+              Help &amp; Support
+            </Link>
+            <Link href="/track-order" className="hidden whitespace-nowrap text-white/70 transition-colors hover:text-gold-300 sm:inline">
               Track Order
             </Link>
           </div>
@@ -110,7 +114,7 @@ export default function Navbar() {
       {/* --------------------------------- Header --------------------------------- */}
       <header
         className={cn(
-          'sticky top-0 z-50 border-b transition-all duration-300',
+          'sticky top-0 z-50 border-b transition-all duration-300 print:hidden',
           scrolled
             ? 'border-sand-200 bg-white/85 shadow-soft backdrop-blur-xl'
             : 'border-transparent bg-sand-50/80 backdrop-blur-md',
@@ -230,6 +234,12 @@ export default function Navbar() {
                             </Link>
                           ))}
                       </div>
+                      <Link
+                        href="/gemstones"
+                        className="mt-2 block rounded-2xl border border-sand-200 px-4 py-3 text-center text-sm font-semibold text-navy-900 transition-colors hover:bg-sand-50"
+                      >
+                        Types of gemstones — the complete guide
+                      </Link>
                       <Link
                         href="/shop"
                         className="mt-2 block rounded-2xl bg-royal-deep px-4 py-3 text-center text-sm font-semibold text-white transition-opacity hover:opacity-90"

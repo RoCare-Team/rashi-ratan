@@ -59,8 +59,33 @@ export function makeOrderId(prefix = 'RR'): string {
   return prefix + '-' + out;
 }
 
-export function estimatedDelivery(days = 5): string {
-  const date = new Date();
+/**
+ * Invoice numbers run per Indian financial year (April – March):
+ * "AG2627/8F3K2Q7M" for FY 2026-27. GST rules cap the serial at 16 characters.
+ */
+export function invoiceNumberFor(orderId: string, placedAt: Date = new Date()): string {
+  const year = placedAt.getMonth() >= 3 ? placedAt.getFullYear() : placedAt.getFullYear() - 1;
+  const fy = `${year % 100}${String((year + 1) % 100).padStart(2, '0')}`;
+  return `AG${fy}/${orderId.replace(/^[A-Z]+-/, '')}`.slice(0, 16);
+}
+
+export function formatDateTime(iso: string): string {
+  return new Date(iso).toLocaleString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+/** Two decimal rupee formatting for tax documents: 1234.5 -> "₹1,234.50" */
+export function formatINRExact(value: number): string {
+  return '₹' + value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+export function estimatedDelivery(days = 5, from: Date = new Date()): string {
+  const date = new Date(from);
   date.setDate(date.getDate() + days);
   return date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }

@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
+import { parseQuoteInput, quoteOrder } from '@/lib/pricing';
+import { makeOrderId } from '@/lib/utils';
 
 /**
  * POST /api/razorpay/order
  * Creates a Razorpay order server side.
+ *
+ * The amount is never taken from the browser: the route re-prices the cart
+ * from the catalogue (coupon, delivery and GST included) and charges that.
  *
  * The key secret is read here and never leaves the server. If credentials are
  * missing the route returns a simulated order so the prototype checkout still
@@ -11,30 +16,38 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-interface OrderRequest {
-  amount?: number; // rupees
-  receipt?: string;
-  notes?: Record<string, string>;
-}
-
 export async function POST(request: Request) {
-  let body: OrderRequest;
+  let body: unknown;
   try {
-    body = (await request.json()) as OrderRequest;
+    body = await request.json();
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const rupees = Number(body.amount);
-  if (!Number.isFinite(rupees) || rupees <= 0) {
-    return NextResponse.json({ error: 'A positive `amount` in rupees is required' }, { status: 400 });
+  const input = parseQuoteInput(body);
+  if (!input) {
+    return NextResponse.json({ error: 'A non-empty `lines` array is required' }, { status: 400 });
   }
 
-  const amount = Math.round(rupees * 100); // paise
+  const quote = quoteOrder({ ...input, paymentMethod: 'online' });
+  if (quote.errors.length > 0 || quote.total <= 0) {
+    return NextResponse.json({ error: quote.errors[0] ?? 'Nothing to charge' }, { status: 422 });
+  }
+
+  const rawNotes = (body as { notes?: unknown }).notes;
+  const notes: Record<string, string> = {};
+  if (rawNotes && typeof rawNotes === 'object') {
+    for (const [key, value] of Object.entries(rawNotes).slice(0, 10)) {
+      if (typeof value === 'string') notes[key.slice(0, 40)] = value.slice(0, 200);
+    }
+  }
+
+  const storeOrderId = makeOrderId();
+  const amount = Math.round(quote.total * 100); // paise
   const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   // Razorpay caps the receipt at 40 characters.
-  const receipt = (body.receipt ?? `rr_${Date.now().toString(36)}`).slice(0, 40);
+  const receipt = storeOrderId.slice(0, 40);
 
   /* ------------------------------- Mock mode ------------------------------- */
   if (!keyId || !keySecret) {
@@ -44,6 +57,7 @@ export async function POST(request: Request) {
       currency: 'INR',
       keyId: null,
       mock: true,
+      storeOrderId,
     });
   }
 
@@ -59,7 +73,7 @@ export async function POST(request: Request) {
         amount,
         currency: 'INR',
         receipt,
-        notes: { source: 'rashi-ratan-web', ...body.notes },
+        notes: { ...notes, source: 'rashi-ratan-web', store_order_id: storeOrderId, gst: String(quote.gst.totalTax) },
       }),
     });
 
@@ -87,6 +101,7 @@ export async function POST(request: Request) {
       currency: order.currency,
       keyId,
       mock: false,
+      storeOrderId,
     });
   } catch (error) {
     console.error('Razorpay order creation error:', error);

@@ -9,6 +9,7 @@ import {
   Check,
   Copy,
   CreditCard,
+  FileText,
   MapPin,
   Package,
   ShoppingBag,
@@ -16,7 +17,7 @@ import {
 } from 'lucide-react';
 import GemVisual from '@/components/GemVisual';
 import { useStore } from '@/context/StoreContext';
-import { estimatedDelivery, formatINR } from '@/lib/utils';
+import { estimatedDelivery, formatINR, formatINRExact } from '@/lib/utils';
 
 const CONFETTI_COLORS = ['#d4a933', '#722ee0', '#f8e9b6', '#12a26b', '#e04a2f', '#8ab6ff'];
 
@@ -86,7 +87,13 @@ export default function OrderSuccessView() {
     );
   }
 
-  const delivery = estimatedDelivery(5);
+  const delivery = estimatedDelivery(5, new Date(lastOrder.placedAt));
+  const isCod = lastOrder.paymentMethod === 'cod';
+  const timeline = TIMELINE.map((step, index) =>
+    index === 0 && isCod ? { ...step, detail: 'Pay on delivery' } : step,
+  );
+  const trackHref = `/track-order?id=${encodeURIComponent(lastOrder.orderId)}`;
+  const invoiceHref = `/invoice?id=${encodeURIComponent(lastOrder.orderId)}`;
 
   return (
     <div className="relative overflow-hidden pb-20">
@@ -123,7 +130,7 @@ export default function OrderSuccessView() {
           </span>
 
           <p className="eyebrow mt-8 justify-center text-emerald-300">
-            <BadgeCheck className="h-4 w-4" /> Payment Successful
+            <BadgeCheck className="h-4 w-4" /> {isCod ? 'Order Placed · Cash on Delivery' : 'Payment Successful'}
           </p>
 
           <h1 className="h-display mt-4 text-4xl text-white sm:text-5xl lg:text-6xl">
@@ -131,7 +138,7 @@ export default function OrderSuccessView() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-white/60">
-            Your order is confirmed and moves into our workshop for a final quality check before it is sealed and
+            Your order {lastOrder.orderId} is confirmed and moves into our workshop for a final quality check before it is sealed and
             dispatched. A confirmation has been sent to {lastOrder.customer.email || 'your email'}.
           </p>
         </div>
@@ -158,7 +165,11 @@ export default function OrderSuccessView() {
                   </button>
                 ),
               },
-              { icon: CreditCard, label: 'Order Amount', value: formatINR(lastOrder.amount) },
+              {
+                icon: CreditCard,
+                label: isCod ? 'Pay on Delivery' : 'Amount Paid',
+                value: formatINR(lastOrder.amount),
+              },
               { icon: Calendar, label: 'Estimated Delivery', value: delivery },
             ].map((card) => (
               <div key={card.label} className="rounded-3xl border border-sand-200 bg-white p-5 shadow-soft">
@@ -176,9 +187,9 @@ export default function OrderSuccessView() {
           <div className="mt-6 rounded-3xl border border-sand-200 bg-white p-6 shadow-soft sm:p-8">
             <h2 className="font-display text-2xl font-semibold text-navy-900">Order status</h2>
             <ol className="mt-6 grid gap-6 sm:grid-cols-4 sm:gap-3">
-              {TIMELINE.map((step, index) => (
+              {timeline.map((step, index) => (
                 <li key={step.label} className="relative flex gap-4 sm:flex-col sm:gap-3">
-                  {index < TIMELINE.length - 1 && (
+                  {index < timeline.length - 1 && (
                     <span className="absolute left-[18px] top-11 h-[calc(100%+0.5rem)] w-px bg-sand-200 sm:left-auto sm:right-0 sm:top-[18px] sm:h-px sm:w-full sm:translate-x-1/2" />
                   )}
                   <span
@@ -230,13 +241,50 @@ export default function OrderSuccessView() {
 
               <div className="mt-4 flex items-end justify-between border-t border-sand-200 pt-4">
                 <div>
-                  <span className="text-sm font-semibold text-navy-900/60">Total paid</span>
+                  <span className="text-sm font-semibold text-navy-900/60">{isCod ? 'Total payable' : 'Total paid'}</span>
                   <p className="text-xs text-navy-900/45">
-                    via {lastOrder.method} · {lastOrder.paymentId}
+                    {isCod ? 'Cash or UPI to the courier' : `via ${lastOrder.method} · ${lastOrder.paymentId}`}
                   </p>
                 </div>
                 <span className="font-display text-3xl font-bold text-navy-900">{formatINR(lastOrder.amount)}</span>
               </div>
+
+              {lastOrder.charges && (lastOrder.charges.discount > 0 || lastOrder.charges.delivery > 0 || lastOrder.charges.codFee > 0) && (
+                <dl className="mt-3 space-y-1 text-xs text-navy-900/55">
+                  {lastOrder.charges.discount > 0 && (
+                    <div className="flex justify-between">
+                      <dt>Discount {lastOrder.charges.couponCode ? `(${lastOrder.charges.couponCode})` : ''}</dt>
+                      <dd>− {formatINR(lastOrder.charges.discount)}</dd>
+                    </div>
+                  )}
+                  {lastOrder.charges.delivery > 0 && (
+                    <div className="flex justify-between">
+                      <dt>Delivery</dt>
+                      <dd>{formatINR(lastOrder.charges.delivery)}</dd>
+                    </div>
+                  )}
+                  {lastOrder.charges.codFee > 0 && (
+                    <div className="flex justify-between">
+                      <dt>COD handling</dt>
+                      <dd>{formatINR(lastOrder.charges.codFee)}</dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+
+              {lastOrder.gst && (
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-sand-50 px-4 py-3 text-xs text-navy-900/60">
+                  <span>
+                    Includes GST {formatINRExact(lastOrder.gst.totalTax)}{' '}
+                    {lastOrder.gst.supplyType === 'intra'
+                      ? `(CGST ${formatINRExact(lastOrder.gst.cgst)} + SGST ${formatINRExact(lastOrder.gst.sgst)})`
+                      : `(IGST ${formatINRExact(lastOrder.gst.igst)})`}
+                  </span>
+                  <Link href={invoiceHref} className="inline-flex items-center gap-1 font-semibold text-royal-700 hover:text-royal-900">
+                    <FileText className="h-3.5 w-3.5" /> View tax invoice
+                  </Link>
+                </div>
+              )}
             </div>
 
             <div className="rounded-3xl border border-sand-200 bg-white p-6 shadow-soft sm:p-8">
@@ -262,8 +310,11 @@ export default function OrderSuccessView() {
 
           {/* Actions */}
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/account" className="btn btn-lg btn-primary">
+            <Link href={trackHref} className="btn btn-lg btn-primary">
               <Truck className="h-4 w-4" /> Track Order
+            </Link>
+            <Link href={invoiceHref} className="btn btn-lg btn-outline">
+              <FileText className="h-4 w-4" /> GST Invoice
             </Link>
             <Link href="/shop" className="btn btn-lg btn-outline">
               Continue Shopping <ArrowRight className="h-4 w-4" />
@@ -271,7 +322,9 @@ export default function OrderSuccessView() {
           </div>
 
           <p className="mt-6 text-center text-xs text-navy-900/40">
-            Prototype demo — this order was generated locally and no payment was captured.
+            {isCod
+              ? 'You will receive an SMS before the courier arrives. Keep the exact amount ready for a quicker handover.'
+              : 'Prototype demo — without live Razorpay keys no real payment is captured.'}
           </p>
         </div>
       </div>

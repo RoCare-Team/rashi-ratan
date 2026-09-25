@@ -21,6 +21,8 @@ export interface CreateOrderResponse {
   keyId: string | null;
   /** true when the server had no credentials and returned a simulated order */
   mock: boolean;
+  /** Our own order id (RR-XXXXXXXX), also sent to Razorpay as the receipt */
+  storeOrderId: string;
 }
 
 export interface RazorpaySuccess {

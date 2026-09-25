@@ -296,7 +296,7 @@ export default function CartView() {
                 <span className="font-semibold text-navy-900">Total Amount</span>
                 <div className="text-right">
                   <p className="font-display text-4xl font-bold text-navy-900">{formatINR(total)}</p>
-                  <p className="text-xs text-navy-900/45">Inclusive of all taxes</p>
+                  <p className="text-xs text-navy-900/45">Inclusive of GST · tax invoice provided</p>
                 </div>
               </div>
 
@@ -306,7 +306,7 @@ export default function CartView() {
 
               <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-medium text-navy-900/45">
                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-                Razorpay secured · UPI, Cards, Net Banking, Wallets
+                Razorpay secured · UPI, Cards, Net Banking · Cash on Delivery
               </p>
             </div>
           </div>

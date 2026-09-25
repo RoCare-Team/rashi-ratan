@@ -17,8 +17,8 @@ const CHANNELS = [
   {
     icon: Phone,
     title: 'Call us',
-    lines: ['+91 98765 43210', 'Mon – Sat, 10 AM – 7 PM IST'],
-    href: 'tel:+919876543210',
+    lines: ['+91 99969 92608', 'Mon – Sat, 10 AM – 7 PM IST'],
+    href: 'tel:+919996992608',
     action: 'Call now',
   },
   {
@@ -31,7 +31,7 @@ const CHANNELS = [
   {
     icon: MessageSquare,
     title: 'WhatsApp',
-    lines: ['+91 98765 43210', 'Fastest for order updates'],
+    lines: ['+91 99969 92608', 'Fastest for order updates'],
     href: whatsappLink('Hi Rashi Ratan, I have a question'),
     action: 'Start a chat',
   },

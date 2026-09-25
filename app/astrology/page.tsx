@@ -166,8 +166,8 @@ export default function AstrologyPage() {
                 <Link href="/contact" className="btn btn-lg btn-gold w-full">
                   Request a call back <ArrowRight className="h-4 w-4" />
                 </Link>
-                <a href="tel:+919876543210" className="btn btn-lg btn-ghost-light w-full">
-                  Call +91 98765 43210
+                <a href="tel:+919996992608" className="btn btn-lg btn-ghost-light w-full">
+                  Call +91 99969 92608
                 </a>
                 <p className="text-center text-xs text-white/40">Mon to Sat · 10:00 AM to 7:00 PM IST</p>
               </div>

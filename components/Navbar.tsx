@@ -97,9 +97,9 @@ export default function Navbar() {
             ))}
           </div>
           <div className="flex items-center gap-5">
-            <a href="tel:+919876543210" className="flex items-center gap-1.5 text-white/70 transition-colors hover:text-gold-300">
+            <a href="tel:+919996992608" className="flex items-center gap-1.5 text-white/70 transition-colors hover:text-gold-300">
               <Phone className="h-3.5 w-3.5" />
-              <span className="hidden whitespace-nowrap sm:inline">+91 98765 43210</span>
+              <span className="hidden whitespace-nowrap sm:inline">+91 99969 92608</span>
             </a>
             <Link href="/support" className="hidden whitespace-nowrap text-white/70 transition-colors hover:text-gold-300 md:inline">
               Help &amp; Support

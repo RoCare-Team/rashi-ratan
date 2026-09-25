@@ -14,11 +14,11 @@ export const SELLER = {
   addressLines: ['4th Floor, Gem Plaza, Johari Bazaar', 'Jaipur, Rajasthan 302003'],
   state: 'Rajasthan',
   stateCode: '08',
-  phone: '+91 98765 43210',
-  phoneHref: 'tel:+919876543210',
+  phone: '+91 99969 92608',
+  phoneHref: 'tel:+919996992608',
   email: 'care@rashiratan.com',
   /** wa.me number: country code + number, digits only */
-  whatsapp: '919876543210',
+  whatsapp: '919996992608',
   hours: 'Mon – Sat, 10 AM – 7 PM IST',
 } as const;
 
